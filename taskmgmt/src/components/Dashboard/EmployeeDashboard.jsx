@@ -43,7 +43,12 @@ if(number===0){
       
     })
     .catch((err)=>{
-      console.log(err)
+      console.log(err.response.data.message)
+      if(err.response.data.message==="unauthorised user"){
+        alert('token expired')
+        navigate('/login');
+      }
+
 ;    })
   },[])
 

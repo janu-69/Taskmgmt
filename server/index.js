@@ -17,25 +17,42 @@ app.use(cors({
 
 
 const userauthrization=async(req,res,next)=>{
-    const data=jwt.verify(req.headers.token,"acnidcddkvdvdvfnbjascv");
-    const user=await usermodel.findOne({email:data.email});
-    if(!req.headers.token && user){
-        res.send({message:"Something went wrong at Authorization"});
+    try {
+        if(!req.headers.token){
+            return res.status(403).send({message:"token missing"});
+        }
+        const data=jwt.verify(req.headers.token,"acnidcddkvdvdvfnbjascv");
+        const user=await usermodel.findOne({email:data.email});
+    if(!user){
+       return res.send({message:"Something went wrong at Authorization"});
     }
     else{
         next();
+    }
+    } catch (error) {
+        return res.status(500).send({message:"unauthorised user"})
+        
     }
 
 }
 const adminauthrization=async(req,res,next)=>{
+    
+   try {
+    if(!req.headers.token){
+        return res.status(403).send({message:"token missing"});
+    }
     const admindata=jwt.verify(req.headers.token,"acnidcddkvdvdvfnbj");
     const admin=await adminmodel.findOne({email:admindata.email});
     if(!req.headers.token && admin){
-        res.send({message:"Something went wrong at Authorization"});
+      return res.send({message:"Something went wrong at Authorization"});
     }
     else{
         next();
     }
+    
+   } catch (error) {
+    return res.status(500).send({message:"unauthorised user"})
+   }
  
 }
 

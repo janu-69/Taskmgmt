@@ -26,10 +26,14 @@ const CreateTask = () => {
           }
         axios.get("http://localhost:7000/userdata",{headers})
         .then((res)=>{
+            console.log(res)
             setusers(res.data);
         }).catch((err)=>{
-            alert("something went wrong");
-            navigate('/adminlogin')
+            console.log(err)
+            if(err.response.data.message==="unauthorised user"){
+                alert("token expired");
+                navigate('/adminlogin')
+            }
         })
     },[]);
 
